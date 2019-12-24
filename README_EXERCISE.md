@@ -43,6 +43,7 @@ We will be building up an application that creates Color Blocks on the DOM based
 - [ ] on the "Swatches" page, when any of the **Add Colors** buttons are clicked a new color block should be saved to the database `blocks` table
 - [ ] on the "Swatches" page, all of the blocks stored in the `blocks` table are displayed on page load
 - [ ] on the "Swatches" page, each individual color block should display the color in a square / rectangle and below the color is the name of the color displayed next to a **Delete** button
+- [ ] on the "Swatches" page, use a 4 column grid to display all of the color blocks on the page
 
 
 ## Part 1: HTML/CSS
