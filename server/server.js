@@ -22,7 +22,6 @@ app.use(bodyParser.json());
 app.use('/api/blocks', blocksRouter);
 app.use('/api/colors', colorsRouter);
 
-
 //
 // RUN SERVER
 // --------------------
