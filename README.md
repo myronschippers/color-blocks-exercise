@@ -1,68 +1,110 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Color Blocks Exercise
 
-## Available Scripts
+We will be building up an application that creates Color Blocks on the DOM based off of buttons that are loaded right away. Additionally, we are going to be tracking the number of Blocks in each color we create. When the user clicks on a color button, it will create a Color Block, then add to that colors count.
 
-In the project directory, you can run:
+## Installation and Setup
 
-### `yarn start`
+1. create a Postgres database called `color_blocks_dashboard`
+1. Use the following queries to setup your tables needed for the exercise
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+    ```sql
+   -- store the different color options
+    CREATE TABLE "colors" (
+        id SERIAL PRIMARY KEY,
+        label VARCHAR(80) NOT NULL,
+        hex_code VARCHAR(6)
+    );
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+    -- store the color blocks that have been created
+    CREATE TABLE "blocks" (
+        id SERIAL PRIMARY KEY,
+        color_id INT REFERENCES "colors"
+    );
 
-### `yarn test`
+    -- pre-load some colors
+    INSERT INTO "colors" ("label", "hex_code")
+    VALUES ('Red', 'ff0000'),
+        ('Yellow', 'ffff00'),
+        ('Blue', '0000ff'),
+        ('Green', '00ff00');
+        
+    -- pre-load some blocks for initial render
+    INSERT INTO "blocks" ("color_id")
+    VALUES (4),
+        (3),
+        (2),
+        (1);
+    ```
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. from the root of the project directory
+    1. run: `npm install`
+    1. run: `npm run server`
+        - starts the node back-end server and restarts the server every time a change is saved
+    1. run: `npm run client`
+        - starts the client-side server with live refresh
 
-### `yarn build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Base Mode
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+At the end of the Base Mode requirements you should have 2 pages with the ability to add Color Swatches (a.k.a. color blocks) to the page as well as deleting them and altering their color. There will be an additional page where a user can add, remove, or update the available color options for the color swatches. These various features will be separated into different parts so that you can execute each **Part** and the application should be testable after the completion of each part.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Leverage `redux` and `redux-saga` for this exercise.
 
-### `yarn eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Part 1: Pages
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- [ ] create two pages "**Swatches**" and "**Colors**"
+    - **Swatches** should be the home URL route, `#/`
+    - **Colors** page should be at a colors URL route, `#/colors`
+- [ ] Create navigation in the `Header.js` component
+    - navigation should have two links one for **Swatches** and another for **Colors**
+- [ ] on the **Swatches** page show a heading that says, "Color Swatches"
+- [ ] on the **Colors** page show a heading that says, "Color Settings"
+- [ ] on each page display some text below the headings to be a placeholder of the page content
+- [ ] setup `redux` and `redux-saga`
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Part 2: Swatches
 
-## Learn More
+- [ ] there is an empty `get` router in `blocks.router.js`, make sure to set it up to pull data from the `blocks` table and the `colors` table in order to have all relevant data
+- [ ] on initial page load **GET** all of the blocks data from the server to display the color blocks on the page
+- [ ] use a 4 column grid to display all of the swatches on the page
+- [ ] each individual swatch should display the color in a square / rectangle and below the color the name / label of the color displayed next to a **Delete** button
+- [ ] when the **Delete** button on an individual swatch is clicked it will remove that swatch from the database and from the list of rendered swatches
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Part 3: Swatches, Add Colors
 
-### Code Splitting
+- [ ] **GET** the colors data from the server in order to render all of the **Add Color** buttons
+    - a route for getting the colors data already exists in the `colors.router.js` router on the server 
+    - the buttons should be added just above where the list of swatches/blocks are displayed
+- [ ] when any of the **Add Colors** buttons are clicked a new swatch should be saved to the database `blocks` table
+    - after a new block has been added to the database the swatches on the page should be reloaded
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
 
-### Analyzing the Bundle Size
+### Part 4: Colors
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+- [ ] on initial page load use the **GET** route supplied in `colors.router.js` to load all of the available colors
+- [ ] the available colors should be listed stacked one on top of the other
+- [ ] an available color item should display a square with the color, the hex code for the color, the label/name of the color, and a **Delete** button
+- [ ] when the **Delete** button is clicked the individual color item should be removed from the database in the `colors` table
+    - if the user has a swatch in their list with the color they are trying to delete then surface a message to the user asking them to remove the swatches with the same color first
 
-### Making a Progressive Web App
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+### Part 5: Colors, Adding a New Color
 
-### Advanced Configuration
+- [ ] create a form just above your list of colors with 2 fields
+    - field: Name (for `label` data)
+    - field: Color Hexcode (for `hex_code` data)
+- [ ] the form should have an **Add Color** button that when clicked will save the user's entered data to the database on the `colors` table
+- [ ] after a new color is added to the database successfully refresh the list of colors
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
 
-### Deployment
+### Part 6: Colors, Updating a Color
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+- [ ] when clicking on a color item change the color item layout from displaying the color item data to displaying a form
+- [ ] the update form should have a field for the **Name** (`label`) and one for the **Haxcode** (`hex_code`) and a **Save** button
+- [ ] the fields should be pre-populated with the current data for that color item
+- [ ] after clicking save for the updated information **PUT** that new data to the server
+    - when a successful response is received reload the colors list
 
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
