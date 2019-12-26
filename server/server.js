@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+// router modules
+const blocksRouter = require('./routers/blocks.router');
+const colorsRouter = require('./routers/colors.router');
 
 //
 // MIDDLEWARE
@@ -15,6 +18,9 @@ app.use(bodyParser.json());
 //
 // ROUTER REGISTRATION
 // --------------------
+
+app.use('/api/blocks', blocksRouter);
+app.use('/api/colors', colorsRouter);
 
 
 //
