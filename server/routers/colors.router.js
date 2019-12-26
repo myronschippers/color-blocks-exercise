@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
 
 // BASE MODE - make a route to save a new color option
 
-// BASE MODE - make a route to update the label and / or label associated with a specific color
+// BASE MODE - make a route to update the label and/or hex_code associated with a specific color
 
 // BASE MODE - make a route to delete a specific color option
 
